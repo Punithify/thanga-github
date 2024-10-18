@@ -4,6 +4,17 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
+# Install build dependencies for compiling pygobject and other native extensions
+RUN apt-get update && apt-get install -y \
+    gcc \
+    pkg-config \
+    libcairo2-dev \
+    libgirepository1.0-dev \
+    gobject-introspection \
+    python3-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy the current directory contents into the container at /app
 COPY . /app
 
@@ -17,5 +28,5 @@ EXPOSE 5000
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=development
 
-# Run flask app
+# Run the flask app
 CMD ["flask", "run", "--host=0.0.0.0"]
